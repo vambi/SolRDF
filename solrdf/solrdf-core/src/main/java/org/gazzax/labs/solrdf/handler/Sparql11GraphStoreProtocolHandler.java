@@ -99,7 +99,6 @@ public class Sparql11GraphStoreProtocolHandler extends RequestHandlerBase {
 		return "(Pseudo) Implementation of a SPARQL 1.1 Graph Store protocol endpoint.";
 	}
 
-	@Override
 	public String getSource() {
 		return "https://github.com/agazzarini/SolRDF";
 	}

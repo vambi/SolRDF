@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.lucene.index.Term;
-import org.apache.lucene.search.NumericRangeQuery;
+import org.apache.lucene.document.DoublePoint;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
@@ -120,7 +120,7 @@ class FieldInjectorRegistry {
 		@Override
 		public void addFilterConstraint(final List<Query> filters, final String value, SolrQueryRequest request) {
 			final Double number = Double.valueOf(value);
-			filters.add(NumericRangeQuery.newDoubleRange(Field.NUMERIC_OBJECT, number, number, true, true));
+			filters.add(DoublePoint.newRangeQuery(Field.NUMERIC_OBJECT, number, number));
 		}		
 
 		@Override
@@ -191,8 +191,9 @@ class FieldInjectorRegistry {
 
 		@Override
 		public void addFilterConstraint(final List<Query> filters, final String value, SolrQueryRequest request) {
-			final PhraseQuery query = new PhraseQuery();
-			query.add(new Term(Field.TEXT_OBJECT, value));
+			PhraseQuery.Builder builder = new PhraseQuery.Builder();
+			builder.add(new Term(Field.TEXT_OBJECT, value));
+			final PhraseQuery query = builder.build();
 			filters.add(query);
 		}		
 		

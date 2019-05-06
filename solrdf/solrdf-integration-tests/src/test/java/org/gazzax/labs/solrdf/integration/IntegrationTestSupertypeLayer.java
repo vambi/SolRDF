@@ -83,7 +83,7 @@ public abstract class IntegrationTestSupertypeLayer extends SolrJettyTestBase {
 		System.setProperty("solr.data.dir", initCoreDataDir.getAbsolutePath());
 			
 		try {
-			SOLR = createJetty(
+			SOLR = createAndStartJetty(
 					"target/solrdf-integration-tests-1.1-dev/solrdf",
 					JettyConfig.builder()
 						.setPort(8080)
@@ -109,7 +109,7 @@ public abstract class IntegrationTestSupertypeLayer extends SolrJettyTestBase {
 		              .withSPARQLEndpointPath("/sparql")
 		              .build();
 			
-			PLAIN_SOLR_CLIENT = new HttpSolrClient(SOLR_URI);
+			PLAIN_SOLR_CLIENT = new HttpSolrClient.Builder(SOLR_URI).build();
 		} catch (final Exception exception) {
 			throw new RuntimeException(exception);
 		}

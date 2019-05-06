@@ -21,9 +21,11 @@ import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.response.SolrQueryResponse;
 import org.apache.solr.search.QParser;
-import org.apache.solr.search.QueryParsing;
+import org.apache.solr.search.QueryCommand;
+import org.apache.solr.search.QueryResult;
 import org.apache.solr.search.SolrIndexSearcher;
 import org.apache.solr.search.SortSpec;
+import org.apache.solr.search.SortSpecParsing;
 import org.apache.solr.search.SyntaxError;
 import org.apache.solr.update.AddUpdateCommand;
 import org.apache.solr.update.DeleteUpdateCommand;
@@ -56,7 +58,7 @@ public final class LocalGraph extends SolRDFGraph {
 		
 	static final Map<String, TermQuery> LANGUAGE_TERM_QUERIES = new HashMap<String, TermQuery>();
 	
-	private SolrIndexSearcher.QueryCommand graphSizeQueryCommand;
+	private QueryCommand graphSizeQueryCommand;
 	private DeleteUpdateCommand clearCommand;
 	
 	final UpdateRequestProcessor updateProcessor;
@@ -83,7 +85,7 @@ public final class LocalGraph extends SolRDFGraph {
 	public class LocalGraphStatisticHandler implements GraphStatisticsHandler {
 		@Override
 		public long getStatistic(final Node s, final Node p, final Node o) {
-			final SolrIndexSearcher.QueryResult result = new SolrIndexSearcher.QueryResult();
+			final QueryResult result = new QueryResult();
 		    try {
 			    return searcher.search(
 			    		result, 
@@ -220,9 +222,9 @@ public final class LocalGraph extends SolRDFGraph {
 	
 	@Override
 	protected int graphBaseSize() {
-		final SolrIndexSearcher.QueryResult result = new SolrIndexSearcher.QueryResult();
+		final QueryResult result = new QueryResult();
 	    try {
-		    return searcher.search(result, graphSizeQueryCommand()).getDocListAndSet().docList.matches();
+		    return (int) searcher.search(result, graphSizeQueryCommand()).getDocListAndSet().docList.matches();
 		} catch (final Exception exception) {
 			LOGGER.error(MessageCatalog._00113_NWS_FAILURE, exception);
 			throw new SolrException(ErrorCode.SERVER_ERROR, exception);
@@ -331,9 +333,9 @@ public final class LocalGraph extends SolRDFGraph {
 	 * 
 	 * @return the graph size query command.
 	 */
-	SolrIndexSearcher.QueryCommand graphSizeQueryCommand() {
+	QueryCommand graphSizeQueryCommand() {
 		if (graphSizeQueryCommand == null) {
-			graphSizeQueryCommand = new SolrIndexSearcher.QueryCommand();
+			graphSizeQueryCommand = new QueryCommand();
 			graphSizeQueryCommand.setQuery(new MatchAllDocsQuery());
 			graphSizeQueryCommand.setLen(0);
 			graphSizeQueryCommand.setFilterList(graphTermQuery);	
@@ -344,15 +346,15 @@ public final class LocalGraph extends SolRDFGraph {
 	SortSpec sortSpec() throws SyntaxError {
 		if (sortSpec == null) {
 				sortSpec = qParser != null 
-			    		? qParser.getSort(true) 
-			    		: QueryParsing.parseSortSpec("id asc", request);
+			    		? qParser.getSortSpec(true) 
+			    		: SortSpecParsing.parseSortSpec("id asc", request);
 			    sortSpec.setOffset(0);		
 		}
 		return sortSpec;
 	}
 	
-	SolrIndexSearcher.QueryCommand queryCommand(final Triple pattern, final SortSpec sortSpec) throws SyntaxError {
-	    final SolrIndexSearcher.QueryCommand cmd = new SolrIndexSearcher.QueryCommand();
+	QueryCommand queryCommand(final Triple pattern, final SortSpec sortSpec) throws SyntaxError {
+	    final QueryCommand cmd = new QueryCommand();
 	    cmd.setQuery(new MatchAllDocsQuery());
 	    cmd.setSort(sortSpec.getSort());
 	    cmd.setLen(queryFetchSize);

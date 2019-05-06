@@ -15,7 +15,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
 
-import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.SolrClient;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -34,7 +34,7 @@ import com.hp.hpl.jena.rdf.model.impl.StmtIteratorImpl;
 public class AddTestCase {
 	String uri;
 	DatasetAccessor dataset;
-	SolrServer solr;
+	SolrClient solr;
 	SolRDF solrdf;
 
 	/**
@@ -45,7 +45,7 @@ public class AddTestCase {
 	@Before
 	public void setUp() throws Exception{
 		dataset = mock(DatasetAccessor.class);
-		solr = mock(SolrServer.class);
+		solr = mock(SolrClient.class);
 		solrdf = new SolRDF(dataset, "/sparql", solr);
 		uri = new URI("http://org.example.blablabla").toString();
 	}

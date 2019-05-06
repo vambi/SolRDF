@@ -34,7 +34,6 @@ public class SparqlQParserPlugin extends QParserPlugin {
 		return "sparql";
 	}
 	
-	@Override
 	public String getSource() {
 		return "$https://github.com/agazzarini/SolRDF/blob/master/solrdf/src/main/java/org/gazzax/labs/solrdf/search/qparser/SparqlQParserPlugin.java $";
 	}

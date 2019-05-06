@@ -1,8 +1,8 @@
 package org.gazzax.labs.solrdf.log;
 
 import org.apache.lucene.search.Query;
-import org.apache.solr.search.SolrIndexSearcher;
-import org.apache.solr.search.SolrIndexSearcher.QueryCommand;
+import org.apache.solr.search.QueryCommand;
+import org.apache.solr.search.QueryResult;
 import org.slf4j.Logger;
 
 import static org.gazzax.labs.solrdf.log.MessageFactory.*;
@@ -130,7 +130,7 @@ public class Log {
 	 * 
 	 * @param cmd the query command.
 	 */
-	public void debugQuery(final QueryCommand cmd, final SolrIndexSearcher.QueryResult result) {
+	public void debugQuery(final QueryCommand cmd, final QueryResult result) {
 		if (logger.isDebugEnabled()) {
 			final StringBuilder builder = new StringBuilder("*:*");
 			for (final Query filter : cmd.getFilterList()) {

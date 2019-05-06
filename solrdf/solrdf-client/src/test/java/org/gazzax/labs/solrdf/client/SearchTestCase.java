@@ -5,7 +5,7 @@ import static org.mockito.Mockito.mock;
 import java.io.FileReader;
 import java.net.URI;
 
-import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.SolrClient;
 import org.gazzax.labs.solrdf.client.SolRDF.CloseableResultSet;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -24,7 +24,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 public class SearchTestCase {
 	String uri;
 	DatasetAccessor dataset;
-	SolrServer solr;
+	SolrClient solr;
 	SolRDF solrdf;
 
 	/**
@@ -35,7 +35,7 @@ public class SearchTestCase {
 	@Before
 	public void setUp() throws Exception{
 		dataset = mock(DatasetAccessor.class);
-		solr = mock(SolrServer.class);
+		solr = mock(SolrClient.class);
 		solrdf = new SolRDF(dataset, "/sparql", solr);
 		uri = new URI("http://org.example.blablabla").toString();
 	}

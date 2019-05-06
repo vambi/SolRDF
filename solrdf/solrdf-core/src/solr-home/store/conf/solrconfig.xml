@@ -136,7 +136,6 @@
 		
 	<requestHandler name="/analysis/field" startup="lazy" class="solr.FieldAnalysisRequestHandler" />
 	<requestHandler name="/analysis/document" class="solr.DocumentAnalysisRequestHandler" startup="lazy" />
-	<requestHandler name="/admin/" class="solr.admin.AdminHandlers" />
 	<requestHandler name="/admin/ping" class="solr.PingRequestHandler">
 		<lst name="invariants">
 			<str name="q">*:*</str>

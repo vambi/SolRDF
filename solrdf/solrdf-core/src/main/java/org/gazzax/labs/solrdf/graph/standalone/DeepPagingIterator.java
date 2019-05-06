@@ -7,6 +7,8 @@ import java.util.Set;
 
 import org.apache.lucene.document.Document;
 import org.apache.solr.search.CursorMark;
+import org.apache.solr.search.QueryCommand;
+import org.apache.solr.search.QueryResult;
 import org.apache.solr.search.DocIterator;
 import org.apache.solr.search.DocList;
 import org.apache.solr.search.SolrIndexSearcher;
@@ -44,7 +46,7 @@ public class DeepPagingIterator extends UnmodifiableIterator<Triple> {
 	protected static final Triple DUMMY_TRIPLE = new Triple(Node.ANY, Node.ANY, Node.ANY);
 	
 	private final SolrIndexSearcher searcher;
-	final SolrIndexSearcher.QueryCommand queryCommand;
+	final QueryCommand queryCommand;
 	final GraphEventConsumer consumer;
 	private DocList page;
 	
@@ -60,7 +62,7 @@ public class DeepPagingIterator extends UnmodifiableIterator<Triple> {
 		@Override
 		public boolean hasNext() {
 			try {
-			    final SolrIndexSearcher.QueryResult result = new SolrIndexSearcher.QueryResult();
+			    final QueryResult result = new QueryResult();
 			    searcher.search(result, queryCommand);
 			  			
 			    LOGGER.debugQuery(queryCommand, result);
@@ -95,7 +97,7 @@ public class DeepPagingIterator extends UnmodifiableIterator<Triple> {
 		@Override
 		public boolean hasNext() {
 			try {
-				final SolrIndexSearcher.QueryResult result = new SolrIndexSearcher.QueryResult();
+				final QueryResult result = new QueryResult();
 			    searcher.search(result, queryCommand);
 
 				LOGGER.debugQuery(queryCommand, result);
@@ -198,7 +200,7 @@ public class DeepPagingIterator extends UnmodifiableIterator<Triple> {
 	 */
 	DeepPagingIterator(
 			final SolrIndexSearcher searcher, 
-			final SolrIndexSearcher.QueryCommand queryCommand, 
+			final QueryCommand queryCommand, 
 			final SortSpec sort, 
 			final GraphEventConsumer consumer) {
 		this.searcher = searcher;

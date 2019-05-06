@@ -3,7 +3,8 @@ package org.gazzax.labs.solrdf.handler.update;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.jena.riot.WebContent;
 import org.apache.solr.common.util.NamedList;
 import org.apache.solr.handler.UpdateRequestHandler;
@@ -20,6 +21,7 @@ import org.gazzax.labs.solrdf.log.MessageCatalog;
  * @since 1.0
  */
 public class RdfUpdateRequestHandler extends UpdateRequestHandler {
+	public static Logger log  = LogManager.getLogger();
 	@Override
 	@SuppressWarnings("rawtypes")
 	protected Map<String, ContentStreamLoader> createDefaultLoaders(final NamedList parameters) {
@@ -40,7 +42,6 @@ public class RdfUpdateRequestHandler extends UpdateRequestHandler {
 		return "SPARQL 1.1 Update Request Handler";
 	}
 	
-	@Override
 	public String getSource() {
 		return "https://github.com/agazzarini/SolRDF";
 	}

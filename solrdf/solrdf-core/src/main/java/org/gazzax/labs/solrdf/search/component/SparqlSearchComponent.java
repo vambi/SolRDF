@@ -56,7 +56,8 @@ public class SparqlSearchComponent extends SearchComponent {
 		super.init(args);
 		final String zkAddress = System.getProperty("zkHost");
 		if (isNotNullOrEmptyString(zkAddress)) {
-			this.server= new CloudSolrClient(zkAddress);
+			this.server= new CloudSolrClient.Builder()
+		            .withZkHost(zkAddress).build();
 			this.server.setDefaultCollection("store");
 		}
 	}
@@ -177,7 +178,6 @@ public class SparqlSearchComponent extends SearchComponent {
 		return "sparql";
 	}
 
-	@Override
 	public String getSource() {
 		return "$https://github.com/agazzarini/SolRDF/blob/master/solrdf/src/main/java/org/gazzax/labs/solrdf/search/component/SparqlSearchComponent.java $";
 	}
@@ -236,7 +236,7 @@ public class SparqlSearchComponent extends SearchComponent {
 	 * @return an appropriate {@link DatasetGraph} for this SolRDF instance.
 	 */
 	DatasetGraph datasetGraph(final SolrQueryRequest request, final SolrQueryResponse response, final QParser parser, final GraphEventConsumer consumer) {
-		return request.getCore().getCoreDescriptor().getCoreContainer().isZooKeeperAware() 
+		return request.getCore().getCoreContainer().isZooKeeperAware() 
 				? new CloudDatasetGraph(request, response, server)
 				: new LocalDatasetGraph(request, response, parser, consumer);
 	}

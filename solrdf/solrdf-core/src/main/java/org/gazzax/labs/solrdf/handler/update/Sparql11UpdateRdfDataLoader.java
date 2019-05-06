@@ -8,6 +8,8 @@ import java.net.URLDecoder;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.solr.client.solrj.impl.CloudSolrClient;
 import org.apache.solr.common.SolrException;
 import org.apache.solr.common.SolrException.ErrorCode;
@@ -42,13 +44,14 @@ import com.hp.hpl.jena.update.UpdateRequest;
  * @since 1.0
  */
 class Sparql11UpdateRdfDataLoader extends ContentStreamLoader {
-	private final static Log LOGGER = new Log(LoggerFactory.getLogger(Sparql11UpdateRdfDataLoader.class));
+	private final static Log LOGGER =  new Log(LoggerFactory.getLogger(Sparql11UpdateRdfDataLoader.class));
 	private static CloudSolrClient CLUSTER;
 	static {
 		// FIXME: TBHB
 		final String zkAddress = System.getProperty("zkHost");
 		if (isNotNullOrEmptyString(zkAddress)) {
-			CLUSTER = new CloudSolrClient(zkAddress);
+			CLUSTER = new CloudSolrClient.Builder()
+		            .withZkHost(zkAddress).build();
 			CLUSTER.setDefaultCollection("store");
 		}
 	}

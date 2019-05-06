@@ -46,4 +46,14 @@ public class SparqlQuery extends Query {
 	public String toString(final String field) {
 		return query.toString();
 	}
+
+	@Override
+	public boolean equals(Object other) {
+		return sameClassAs(other)&& query.equals(other);
+	}
+
+	@Override
+	public int hashCode() {
+	 return classHash() ;
+	}
 }

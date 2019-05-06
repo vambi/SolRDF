@@ -20,6 +20,8 @@ import org.apache.solr.request.SimpleFacets;
 import org.apache.solr.request.SolrQueryRequest;
 import org.apache.solr.response.SolrQueryResponse;
 import org.apache.solr.search.QParser;
+import org.apache.solr.search.QueryCommand;
+import org.apache.solr.search.QueryResult;
 import org.apache.solr.search.SolrIndexSearcher;
 import org.gazzax.labs.solrdf.Field;
 import org.gazzax.labs.solrdf.NTriples;
@@ -41,7 +43,7 @@ import com.hp.hpl.jena.graph.Node;
  */
 public class LocalDatasetGraph extends DatasetGraphSupertypeLayer {
 	final static Log LOGGER = new Log(LoggerFactory.getLogger(LocalDatasetGraph.class));
-	final static SolrIndexSearcher.QueryCommand GET_GRAPH_NODES_QUERY = new SolrIndexSearcher.QueryCommand();
+	final static QueryCommand GET_GRAPH_NODES_QUERY = new QueryCommand();
 	static {
 		GET_GRAPH_NODES_QUERY.setQuery(new MatchAllDocsQuery());
 		GET_GRAPH_NODES_QUERY.setLen(0);
@@ -78,7 +80,7 @@ public class LocalDatasetGraph extends DatasetGraphSupertypeLayer {
 	
 	@Override
 	public Iterator<Node> listGraphNodes() {
-	    final SolrIndexSearcher.QueryResult result = new SolrIndexSearcher.QueryResult();
+	    final QueryResult result = new QueryResult();
 	    try {
 			request.getSearcher().search(result, GET_GRAPH_NODES_QUERY);
 			final SimpleFacets facets = new SimpleFacets(
@@ -97,8 +99,7 @@ public class LocalDatasetGraph extends DatasetGraphSupertypeLayer {
 					"count"
 					,null,
 					null,
-					false,
-					null);
+					false);
 			final List<Node> graphs = new ArrayList<Node>();
 			for (final Entry<String, Integer> entry : list) {
 				if (!SolRDFGraph.UNNAMED_GRAPH_PLACEHOLDER.equals(entry.getKey())) {
@@ -127,12 +128,12 @@ public class LocalDatasetGraph extends DatasetGraphSupertypeLayer {
 
 	@Override
 	protected boolean _containsGraph(final Node graphNode) {
-	    final SolrIndexSearcher.QueryCommand cmd = new SolrIndexSearcher.QueryCommand();
+	    final QueryCommand cmd = new QueryCommand();
 	    cmd.setQuery(new MatchAllDocsQuery());
 	    cmd.setLen(0);
 	    cmd.setFilterList(new TermQuery(new Term(Field.C, asNtURI(graphNode))));				
 	    
-	    final SolrIndexSearcher.QueryResult result = new SolrIndexSearcher.QueryResult();
+	    final QueryResult result = new QueryResult();
 	    try {
 			request.getSearcher().search(result, cmd);
 		    return result.getDocListAndSet().docList.matches() > 0;

@@ -121,7 +121,6 @@ public class SolRDF {
 		private String zkHost;
 		
 		private Set<String> endpoints = new HashSet<String>();
-		
 		/**
 		 * Adds a new SolRDF endpoint to this builder.
 		 * An endpoint is a running SolRDF node. For example http://127.0.0.1:8080/solr/store
@@ -195,10 +194,11 @@ public class SolRDF {
 								graphStoreProtocolEndpointPath),
 						firstEndpointAddress + sparqlEndpointPath,		
 						zkHost != null
-							? new CloudSolrClient(zkHost)
+							? new CloudSolrClient.Builder()
+						            .withZkHost(zkHost).build()
 							: (endpoints.size() == 1)
-								? new HttpSolrClient(endpoints.iterator().next(), httpClient)
-								: new LBHttpSolrClient(httpClient, endpoints.toArray(new String[endpoints.size()])));
+								? new HttpSolrClient.Builder(endpoints.iterator().next()).withHttpClient(httpClient).build()
+								: new LBHttpSolrClient.Builder().withHttpClient(httpClient).withBaseSolrUrls(endpoints.toArray(new String[endpoints.size()])).build());
 			} catch (final Exception exception) {
 				throw new UnableToBuildSolRDFClientException(exception);
 			}	
@@ -220,7 +220,7 @@ public class SolRDF {
 	 * @param dataset the {@link DatasetAccessor} representing the remote endpoint.
 	 * @param solr the (remote) Solr proxy.
 	 */
-	SolRDF(
+	public SolRDF(
 			final DatasetAccessor dataset, 
 			final String sparqlEndpointAddress,
 			final SolrClient solr) {
@@ -230,6 +230,8 @@ public class SolRDF {
 		this.sparqlEndpoint = sparqlEndpointAddress;
 	}
 	
+
+
 	/**
 	 * Clears the default model on SolRDF.
 	 * 

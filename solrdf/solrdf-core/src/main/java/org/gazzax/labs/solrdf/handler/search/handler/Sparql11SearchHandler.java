@@ -25,7 +25,7 @@ import org.apache.solr.request.SolrRequestHandler;
 import org.apache.solr.response.SolrQueryResponse;
 import org.apache.solr.schema.IndexSchema;
 import org.apache.solr.search.SolrIndexSearcher;
-import org.apache.solr.util.RTimer;
+import org.apache.solr.util.RTimerTree;
 import org.gazzax.labs.solrdf.Names;
 
 /**
@@ -159,7 +159,6 @@ public class Sparql11SearchHandler extends RequestHandlerBase {
 		return "SPARQL 1.1 Search Handler";
 	}
 
-	@Override
 	public String getSource() {
 		return "https://github.com/agazzarini/SolRDF";
 	}
@@ -315,7 +314,7 @@ public class Sparql11SearchHandler extends RequestHandlerBase {
 		}
 
 		@Override
-		public RTimer getRequestTimer() {
+		public RTimerTree getRequestTimer() {
 			return request.getRequestTimer();
 		}
 
@@ -423,7 +422,7 @@ public class Sparql11SearchHandler extends RequestHandlerBase {
 		}		
 		
 		@Override
-		public RTimer getRequestTimer() {
+		public RTimerTree getRequestTimer() {
 			return request.getRequestTimer();
 		}
 

@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFLanguages;
@@ -17,6 +16,8 @@ import org.apache.jena.riot.lang.PipedQuadsStream;
 import org.apache.jena.riot.lang.PipedRDFIterator;
 import org.apache.jena.riot.lang.PipedTriplesStream;
 import org.apache.jena.riot.system.StreamRDF;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.solr.common.SolrException;
 import org.apache.solr.common.SolrException.ErrorCode;
 import org.apache.solr.common.params.UpdateParams;
@@ -51,6 +52,7 @@ public class RdfBulkUpdateRequestHandler extends UpdateRequestHandler {
 	 * @author Andrea Gazzarini
 	 * @since 1.0
 	 */
+	public static Logger log = LogManager.getLogger();
 	private class RdfDataLoader extends ContentStreamLoader {
 		final ExecutorService executor = Executors.newSingleThreadExecutor();
 		
@@ -230,7 +232,6 @@ public class RdfBulkUpdateRequestHandler extends UpdateRequestHandler {
 		return "RDFBulkUpdateRequestHandler";
 	}
 	
-	@Override
 	public String getSource() {
 		return "$https://github.com/agazzarini/SolRDF/blob/master/solrdf/src/main/java/org/gazzax/labs/solrdf/handler/update/RdfBulkUpdateRequestHandler.java $";
 	}
